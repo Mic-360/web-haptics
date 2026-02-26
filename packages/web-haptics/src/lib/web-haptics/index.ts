@@ -1,4 +1,3 @@
-import { HapticDebugger } from "./debug";
 import { defaultPatterns } from "./patterns";
 import type { HapticInput, TriggerOptions, WebHapticsOptions } from "./types";
 
@@ -8,11 +7,15 @@ export class WebHaptics {
   private hapticLabel: HTMLLabelElement | null = null;
   private domInitialized = false;
   private instanceId: number;
-  private hapticDebugger: HapticDebugger | null;
+  private debug: boolean;
+  private rafId: number | null = null;
+  private audioCtx: AudioContext | null = null;
+  private oscillator: OscillatorNode | null = null;
+  private gainNode: GainNode | null = null;
 
   constructor(options?: WebHapticsOptions) {
     this.instanceId = ++instanceCounter;
-    this.hapticDebugger = options?.debug ? new HapticDebugger() : null;
+    this.debug = options?.debug ?? false;
   }
 
   static isSupported(): boolean {
@@ -38,52 +41,90 @@ export class WebHaptics {
       }
     }
 
-    if (this.hapticDebugger) {
-      this.hapticDebugger.run(pattern, intensity);
-    }
-
     if (WebHaptics.isSupported()) {
       navigator.vibrate(pattern);
-    } else {
+    }
+
+    if (!WebHaptics.isSupported() || this.debug) {
       this.ensureDOM();
       if (!this.hapticLabel) return;
 
-      // intensity controls toggle rate: 1.0 = every 10ms, 0.1 = every 100ms
-      const toggleInterval = Math.round(10 + 90 * (1 - intensity));
+      if (this.debug) {
+        await this.ensureAudio();
+      }
 
       for (let i = 0; i < pattern.length; i++) {
         if (i % 2 === 0) {
-          const duration = pattern[i]!;
-          const toggleCount = Math.max(
-            1,
-            Math.floor(duration / toggleInterval),
-          );
-          const interval = duration / toggleCount;
-
-          for (let t = 0; t < toggleCount; t++) {
-            this.hapticLabel.click();
-            await new Promise((resolve) => setTimeout(resolve, interval));
-          }
+          this.startToggleLoop(intensity);
         } else {
-          await new Promise((resolve) => setTimeout(resolve, pattern[i]));
+          this.stopToggleLoop();
         }
+        await new Promise((resolve) => setTimeout(resolve, pattern[i]));
       }
+      this.stopToggleLoop();
     }
   }
 
   cancel(): void {
+    this.stopToggleLoop();
     if (WebHaptics.isSupported()) {
       navigator.vibrate(0);
     }
   }
 
   destroy(): void {
+    this.stopToggleLoop();
     if (this.hapticLabel) {
       this.hapticLabel.remove();
       this.hapticLabel = null;
       this.domInitialized = false;
     }
-    this.hapticDebugger?.destroy();
+    if (this.audioCtx) {
+      this.audioCtx.close();
+      this.audioCtx = null;
+    }
+  }
+
+  private startToggleLoop(intensity: number): void {
+    if (this.rafId !== null) return;
+
+    if (this.debug && this.audioCtx) {
+      this.oscillator = this.audioCtx.createOscillator();
+      this.gainNode = this.audioCtx.createGain();
+      this.oscillator.type = "triangle";
+      this.oscillator.frequency.value = 200;
+      this.gainNode.gain.value = intensity;
+      this.oscillator.connect(this.gainNode);
+      this.gainNode.connect(this.audioCtx.destination);
+      this.oscillator.start();
+    }
+
+    const loop = () => {
+      this.hapticLabel?.click();
+      this.rafId = requestAnimationFrame(loop);
+    };
+    this.rafId = requestAnimationFrame(loop);
+  }
+
+  private stopToggleLoop(): void {
+    if (this.rafId !== null) {
+      cancelAnimationFrame(this.rafId);
+      this.rafId = null;
+    }
+    if (this.oscillator) {
+      this.oscillator.stop();
+      this.oscillator = null;
+      this.gainNode = null;
+    }
+  }
+
+  private async ensureAudio(): Promise<void> {
+    if (!this.audioCtx && typeof AudioContext !== "undefined") {
+      this.audioCtx = new AudioContext();
+    }
+    if (this.audioCtx?.state === "suspended") {
+      await this.audioCtx.resume();
+    }
   }
 
   private ensureDOM(): void {
