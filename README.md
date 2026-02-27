@@ -1,20 +1,26 @@
-# web-haptics
+# WebHaptics
 
-Haptic feedback for the web.
+Haptic feedback for the web. Supports React, Vue, and Svelte.
 
 ## Installation
 
-```shell
-pnpm i web-haptics
+```sh
+npm i web-haptics
 ```
 
 ## Usage
 
 ```tsx
-import { WebHaptics } from "web-haptics/react";
+import { useWebHaptics } from "web-haptics/react";
 
-<WebHaptics>Hello world</WebHaptics>;
+function App() {
+  const { trigger } = useWebHaptics();
+
+  return <button onClick={() => trigger("success")}>Tap me</button>;
+}
 ```
+
+See the [package README](packages/web-haptics/README.md) for Vue, Svelte, and vanilla examples.
 
 # Contributing
 
@@ -35,3 +41,18 @@ pnpm dev
 ```sh
 pnpm build
 ```
+
+## Found this useful?
+
+Follow me on [Twitter](https://twitter.com/lochieaxon).
+
+## Other projects
+
+You might also like:
+
+- [Torph](https://torph.lochie.me) - Dependency-free animated text component.
+- [easing.dev](https://easing.dev) - Easily create custom easing graphs.
+
+# Acknowledgements
+
+- Special thanks to [Alex](https://x.com/alexvanderzon) for assistance with the site design.

@@ -1,7 +1,9 @@
 {
   "name": "web-haptics",
   "version": "0.0.1",
-  "description": "",
+  "description": "Haptic feedback for the mobile web.",
+  "homepage": "https://haptics.lochie.me",
+  "sideEffects": false,
   "author": "Lochie Axon",
   "license": "MIT",
   "repository": {
@@ -40,20 +42,27 @@
     "dev": "tsup --watch",
     "lint": "eslint -c .eslintrc.cjs ./src/**/*.{ts,tsx}",
     "lint:fix": "eslint --fix -c .eslintrc.cjs ./src/**/*.{ts,tsx}",
-    "pre-commit": "lint-staged"
+    "pre-commit": "lint-staged",
+    "prepublishOnly": "pnpm build"
   },
   "keywords": [
     "haptics",
+    "vibration",
+    "feedback",
     "web",
+    "mobile",
     "react",
     "vue",
-    "svelte"
+    "svelte",
+    "typescript"
   ],
   "bugs": {
     "url": "https://github.com/lochie/web-haptics/issues"
   },
   "files": [
-    "dist/*"
+    "dist/*",
+    "LICENSE",
+    "README.md"
   ],
   "peerDependencies": {
     "react": ">=18",
