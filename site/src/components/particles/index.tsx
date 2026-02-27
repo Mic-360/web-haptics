@@ -37,7 +37,6 @@ export const ParticlesProvider = ({
 }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const particles = useRef<Particle[]>([]);
-  const pointerTimeout = useRef<ReturnType<typeof setTimeout>>();
 
   useAnimationFrame(() => {
     if (particles.current) {
@@ -62,23 +61,6 @@ export const ParticlesProvider = ({
 
   const create = useCallback(
     (x: number, y: number, emojis: string[] = ["✨", "🔥"]) => {
-      const pointer = document.getElementById("delight-container-pointer");
-      if (pointer) {
-        pointer.style.left = x + "px";
-        pointer.style.top = y + "px";
-        pointer.style.opacity = "1";
-        pointer.style.width = "3.5rem";
-        pointer.style.height = "3.5rem";
-        pointer.style.transitionDuration = "100ms";
-        clearTimeout(pointerTimeout.current);
-        pointerTimeout.current = setTimeout(() => {
-          pointer.style.opacity = "0";
-          pointer.style.width = "2rem";
-          pointer.style.height = "2rem";
-          pointer.style.transitionDuration = "600ms";
-        }, 200);
-      }
-
       const amount = 4;
 
       if (particles.current.length > MAX_PARTICLES) return;
