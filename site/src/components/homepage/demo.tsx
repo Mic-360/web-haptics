@@ -32,8 +32,8 @@ export const Demo = () => {
             key={name}
             aria-description={pattern.description}
             onPointerDown={(e) => {
-              e.preventDefault();
               handleTrigger(name, pattern);
+              e.preventDefault();
             }}
           >
             <span
