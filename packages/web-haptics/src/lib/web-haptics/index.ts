@@ -4,6 +4,43 @@ import type { HapticInput, TriggerOptions, WebHapticsOptions } from "./types";
 const TOGGLE_MIN = 16; // ms at intensity 1 (every frame)
 const TOGGLE_MAX = 184; // range above min (0.5 intensity ≈ 100ms)
 const MAX_PHASE_MS = 1000; // browser haptic window limit
+const PWM_CYCLE = 20; // ms per intensity modulation cycle
+
+function modulatePattern(pattern: number[], intensity: number): number[] {
+  if (intensity >= 1) return pattern;
+  if (intensity <= 0) return [];
+
+  const onTime = Math.max(1, Math.round(PWM_CYCLE * intensity));
+  const offTime = PWM_CYCLE - onTime;
+  const result: number[] = [];
+
+  for (let i = 0; i < pattern.length; i++) {
+    const dur = pattern[i]!;
+
+    if (i % 2 === 0) {
+      let remaining = dur;
+      while (remaining >= PWM_CYCLE) {
+        result.push(onTime);
+        result.push(offTime);
+        remaining -= PWM_CYCLE;
+      }
+      if (remaining > 0) {
+        const remOn = Math.max(1, Math.round(remaining * intensity));
+        result.push(remOn);
+        const remOff = remaining - remOn;
+        if (remOff > 0) result.push(remOff);
+      }
+    } else {
+      if (result.length > 0 && result.length % 2 === 0) {
+        result[result.length - 1]! += dur;
+      } else {
+        result.push(dur);
+      }
+    }
+  }
+
+  return result;
+}
 
 let instanceCounter = 0;
 
@@ -62,7 +99,7 @@ export class WebHaptics {
     }
 
     if (WebHaptics.isSupported()) {
-      navigator.vibrate(pattern);
+      navigator.vibrate(modulatePattern(pattern, intensity));
     }
 
     if (!WebHaptics.isSupported() || this.debug) {
