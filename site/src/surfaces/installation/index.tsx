@@ -2,11 +2,10 @@ import { useState } from "react";
 
 import styles from "./styles.module.scss";
 
-import { useWebHaptics } from "web-haptics/react";
 import { TextMorph } from "torph/react";
 
 import { CodeBlock } from "../../components/codeblock";
-import { useApp } from "../../context/app";
+
 import { Toggle, ToggleGroup } from "../../components/toggle";
 
 const pkgCmds = {
@@ -17,9 +16,6 @@ const pkgCmds = {
 };
 
 export const InstallCommands = () => {
-  const { debug } = useApp();
-  const { trigger } = useWebHaptics({ debug });
-
   const [cmdIndex, setCmdIndex] = useState(0);
   return (
     <div className={styles.install}>
