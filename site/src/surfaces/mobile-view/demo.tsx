@@ -71,11 +71,6 @@ export const Demo = ({
               onClick={(e) => {
                 handleTrigger(name, pattern, e.clientX, e.clientY);
               }}
-              onPointerDown={(e) => {
-                setTimeout(() => {
-                  handleTrigger(name, pattern, e.clientX, e.clientY);
-                }, 100);
-              }}
             >
               <span>{name.charAt(0).toUpperCase() + name.slice(1)}</span>
             </button>
