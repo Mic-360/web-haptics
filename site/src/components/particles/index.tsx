@@ -9,7 +9,14 @@ import React, {
 } from "react";
 
 type ParticlesContextValue = {
-  create: (x: number, y: number, emojis: string[], duration?: number) => void;
+  create: (
+    x: number,
+    y: number,
+    emojis: string[],
+    duration?: number,
+    gx?: number,
+    gy?: number,
+  ) => void;
 };
 
 interface Particle {
@@ -25,6 +32,8 @@ interface Particle {
   emoji: string;
   fontSize: number;
   radius: number;
+  gx: number;
+  gy: number;
 }
 
 const ParticlesContext = createContext<ParticlesContextValue | null>(null);
@@ -38,7 +47,7 @@ export const useParticles = () => {
 };
 
 const MAX_ACTIVE = 2000;
-const ANIM_FRAMES = 120;
+const ANIM_FRAMES = 300;
 
 // --- Emoji cache ---
 
@@ -77,7 +86,8 @@ function updateParticle(p: Particle): boolean {
   p.xv *= 0.98;
   p.x += p.xv;
   p.s += (1 - p.s) * 0.3;
-  p.yv += (-1.5 + p.yv) * 0.1;
+  p.xv += p.gx * 0.1;
+  p.yv += (p.gy + p.yv) * 0.1;
 
   p.radius = p.fontSize * p.s * 0.5;
 
@@ -157,6 +167,8 @@ function spawnBurst(
   x: number,
   y: number,
   emojis: string[],
+  gx: number,
+  gy: number,
 ) {
   const amount = 4;
   if (particles.length + amount > MAX_ACTIVE) return;
@@ -180,6 +192,8 @@ function spawnBurst(
       emoji: emojis[Math.floor(Math.random() * emojis.length)] || "\u2728",
       fontSize: 20 + Math.ceil(Math.random() * 40),
       radius: 0,
+      gx,
+      gy,
     });
   }
 }
@@ -264,15 +278,20 @@ export const ParticlesProvider = ({
       y: number,
       emojis: string[] = ["\u2728", "\uD83D\uDD25"],
       duration?: number,
+      gx: number = 0,
+      gy: number = -1.5,
     ) => {
       const particles = particlesRef.current;
-      spawnBurst(particles, x, y, emojis);
+      spawnBurst(particles, x, y, emojis, gx, gy);
 
       if (duration && duration > 0) {
         const interval = 150;
         const count = Math.floor(duration / interval);
         for (let i = 1; i <= count; i++) {
-          setTimeout(() => spawnBurst(particles, x, y, emojis), i * interval);
+          setTimeout(
+            () => spawnBurst(particles, x, y, emojis, gx, gy),
+            i * interval,
+          );
         }
       }
     },
