@@ -188,8 +188,8 @@ importers:
         specifier: ^6.0.0
         version: 6.21.0(eslint@8.57.1)(typescript@5.2.2)
       '@vitejs/plugin-react':
-        specifier: ^4.7.0
-        version: 4.7.0(vite@7.3.1(@types/node@20.5.1)(sass@1.93.0)(yaml@2.8.1))
+        specifier: ^4.6.0
+        version: 4.7.0(vite@6.4.1(@types/node@20.5.1)(sass@1.93.0)(yaml@2.8.1))
       autoprefixer:
         specifier: ^10
         version: 10.4.21(postcss@8.5.6)
@@ -212,8 +212,8 @@ importers:
         specifier: ^5.0.2
         version: 5.2.2
       vite:
-        specifier: ^7.3.1
-        version: 7.3.1(@types/node@20.5.1)(sass@1.93.0)(yaml@2.8.1)
+        specifier: ^6.4.1
+        version: 6.4.1(@types/node@20.5.1)(sass@1.93.0)(yaml@2.8.1)
 
 packages:
 
@@ -3445,6 +3445,46 @@ packages:
   validate-npm-package-license@3.0.4:
     resolution: {integrity: sha512-DpKm2Ui/xN7/HQKCtpZxoRWBhZ9Z0kqtygG8XCgNQ8ZlDnxuQmWhj566j8fN4Cu3/JmbhsDo7fcAJq4s9h27Ew==}
 
+  vite@6.4.1:
+    resolution: {integrity: sha512-+Oxm7q9hDoLMyJOYfUYBuHQo+dkAloi33apOPP56pzj+vsdJDzr+j1NISE5pyaAuKL4A3UD34qd0lx5+kfKp2g==}
+    engines: {node: ^18.0.0 || ^20.0.0 || >=22.0.0}
+    hasBin: true
+    peerDependencies:
+      '@types/node': ^18.0.0 || ^20.0.0 || >=22.0.0
+      jiti: '>=1.21.0'
+      less: '*'
+      lightningcss: ^1.21.0
+      sass: '*'
+      sass-embedded: '*'
+      stylus: '*'
+      sugarss: '*'
+      terser: ^5.16.0
+      tsx: ^4.8.1
+      yaml: ^2.4.2
+    peerDependenciesMeta:
+      '@types/node':
+        optional: true
+      jiti:
+        optional: true
+      less:
+        optional: true
+      lightningcss:
+        optional: true
+      sass:
+        optional: true
+      sass-embedded:
+        optional: true
+      stylus:
+        optional: true
+      sugarss:
+        optional: true
+      terser:
+        optional: true
+      tsx:
+        optional: true
+      yaml:
+        optional: true
+
   vite@7.3.1:
     resolution: {integrity: sha512-w+N7Hifpc3gRjZ63vYBXA56dvvRlNWRczTdmCBBa+CotUzAPf5b7YMdMR/8CQoeYE5LX3W4wj6RYTgonm1b9DA==}
     engines: {node: ^20.19.0 || >=22.12.0}
@@ -4664,6 +4704,18 @@ snapshots:
       eslint-visitor-keys: 3.4.3
 
   '@ungap/structured-clone@1.3.0': {}
+
+  '@vitejs/plugin-react@4.7.0(vite@6.4.1(@types/node@20.5.1)(sass@1.93.0)(yaml@2.8.1))':
+    dependencies:
+      '@babel/core': 7.28.4
+      '@babel/plugin-transform-react-jsx-self': 7.27.1(@babel/core@7.28.4)
+      '@babel/plugin-transform-react-jsx-source': 7.27.1(@babel/core@7.28.4)
+      '@rolldown/pluginutils': 1.0.0-beta.27
+      '@types/babel__core': 7.20.5
+      react-refresh: 0.17.0
+      vite: 6.4.1(@types/node@20.5.1)(sass@1.93.0)(yaml@2.8.1)
+    transitivePeerDependencies:
+      - supports-color
 
   '@vitejs/plugin-react@4.7.0(vite@7.3.1(@types/node@20.5.1)(sass@1.93.0)(yaml@2.8.1))':
     dependencies:
@@ -7203,6 +7255,20 @@ snapshots:
     dependencies:
       spdx-correct: 3.2.0
       spdx-expression-parse: 3.0.1
+
+  vite@6.4.1(@types/node@20.5.1)(sass@1.93.0)(yaml@2.8.1):
+    dependencies:
+      esbuild: 0.25.10
+      fdir: 6.5.0(picomatch@4.0.3)
+      picomatch: 4.0.3
+      postcss: 8.5.6
+      rollup: 4.52.0
+      tinyglobby: 0.2.15
+    optionalDependencies:
+      '@types/node': 20.5.1
+      fsevents: 2.3.3
+      sass: 1.93.0
+      yaml: 2.8.1
 
   vite@7.3.1(@types/node@20.5.1)(sass@1.93.0)(yaml@2.8.1):
     dependencies:
