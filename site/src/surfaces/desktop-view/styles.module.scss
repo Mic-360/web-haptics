@@ -83,7 +83,6 @@
     position: absolute;
     inset: -0.25rem;
   }
-
 }
 
 .scan {
@@ -103,9 +102,10 @@
     padding: 1rem;
     background: #ffffff;
     box-shadow:
-      inset 0 0 0 1px rgba(0, 0, 0, 0.05),
+      0 0 0 1px rgba(0, 0, 0, 0.05),
       0px 0px 27px rgba(0, 0, 0, 0.1);
-    border-radius: 1.5rem;
+    border-radius: 1.25rem;
+
     svg {
       display: block;
     }
